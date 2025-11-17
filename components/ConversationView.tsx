@@ -115,7 +115,7 @@ const ConversationView: React.FC<ConversationViewProps> = ({ language, onSession
 
   return (
     <div className="flex flex-col h-screen bg-gray-900 p-4 relative">
-      <div className="relative w-48 h-36 md:w-64 md:h-48 rounded-lg overflow-hidden self-center shadow-lg border-2 border-gray-700">
+      <div className="relative w-48 h-36 md:w-64 md:h-48 rounded-lg overflow-hidden self-center shadow-lg border-2 border-gray-700 flex-shrink-0">
         <video ref={videoRef} autoPlay muted playsInline className="w-full h-full object-cover transform -scale-x-100" />
         {!isCameraOn && <div className="absolute inset-0 bg-black flex items-center justify-center"><VideoOffIcon className="w-12 h-12 text-gray-500"/></div>}
         <canvas ref={canvasRef} className="hidden" />
@@ -129,7 +129,7 @@ const ConversationView: React.FC<ConversationViewProps> = ({ language, onSession
             </div>
           </div>
         ))}
-         {isSpeaking && (
+         {isSpeaking && !error && (
             <div className="flex justify-start">
               <div className="p-3 rounded-lg bg-gray-700 text-gray-400 italic">
                 AI is speaking...
@@ -138,23 +138,37 @@ const ConversationView: React.FC<ConversationViewProps> = ({ language, onSession
          )}
       </div>
       
-      {error && <p className="text-red-400 text-center mb-2">{error}</p>}
-      
-      <div className="flex flex-col items-center justify-center pt-2">
-        <div className={`w-20 h-20 rounded-full flex items-center justify-center transition-colors duration-300 ${isListening ? 'bg-purple-600 animate-pulse' : 'bg-gray-700'}`}>
-           {isListening ? <MicIcon className="w-10 h-10 text-white"/> : <MicOffIcon className="w-10 h-10 text-gray-400"/>}
-        </div>
-        <p className="text-gray-400 mt-2">{isListening ? "Listening..." : "Mic is off"}</p>
+      <div className="flex-shrink-0 flex flex-col items-center justify-center pt-2 pb-4">
+        {error ? (
+          <div className="text-center">
+            <p className="text-red-400 text-lg mb-4 max-w-md">{error}</p>
+            <button
+              onClick={handleEndSessionClick}
+              className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+            >
+              End Session & View Summary
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className={`w-20 h-20 rounded-full flex items-center justify-center transition-colors duration-300 ${isListening ? 'bg-purple-600 animate-pulse' : 'bg-gray-700'}`}>
+              {isListening ? <MicIcon className="w-10 h-10 text-white"/> : <MicOffIcon className="w-10 h-10 text-gray-400"/>}
+            </div>
+            <p className="text-gray-400 mt-2">{isListening ? "Listening..." : "Mic is off"}</p>
+          </>
+        )}
       </div>
 
-      <div className="absolute bottom-5 right-5 flex space-x-4">
-        <button onClick={toggleCamera} className="bg-gray-700 hover:bg-gray-600 p-3 rounded-full transition-colors">
-          {isCameraOn ? <VideoIcon className="w-6 h-6 text-white"/> : <VideoOffIcon className="w-6 h-6 text-white"/>}
-        </button>
-        <button onClick={handleEndSessionClick} className="bg-red-600 hover:bg-red-700 p-3 rounded-full transition-colors">
-          <StopIcon className="w-6 h-6 text-white"/>
-        </button>
-      </div>
+      {!error && (
+        <div className="absolute bottom-5 right-5 flex space-x-4">
+          <button onClick={toggleCamera} className="bg-gray-700 hover:bg-gray-600 p-3 rounded-full transition-colors">
+            {isCameraOn ? <VideoIcon className="w-6 h-6 text-white"/> : <VideoOffIcon className="w-6 h-6 text-white"/>}
+          </button>
+          <button onClick={handleEndSessionClick} className="bg-red-600 hover:bg-red-700 p-3 rounded-full transition-colors">
+            <StopIcon className="w-6 h-6 text-white"/>
+          </button>
+        </div>
+      )}
     </div>
   );
 };
