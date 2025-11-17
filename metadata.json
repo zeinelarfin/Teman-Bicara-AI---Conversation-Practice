@@ -1,0 +1,8 @@
+{
+  "name": "TemanBicara AI Tutor",
+  "description": "An AI-powered conversation partner to help you practice English, Indonesian, and Japanese in a natural, friendly, and relaxed way. Uses your camera and microphone for a fully immersive voice and video experience.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
